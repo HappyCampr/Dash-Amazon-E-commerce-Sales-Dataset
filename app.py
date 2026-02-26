@@ -87,10 +87,12 @@ category_options = safe_unique_sorted(df_all, "category")
 state_options = safe_unique_sorted(df_all, "state")
 sub_category_options = safe_unique_sorted(df_all, "sub_category")
 
-app = Dash(__name__)
-app.title = "Amazon Sales Dashboard"
+dash_app = Dash(__name__)
+server = dash_app.server
 
-app.layout = html.Div(
+dash_app.title = "Amazon Sales Dashboard"
+
+dash_app.layout = html.Div(
     id="main-container",
     style={
         "minHeight": "100vh",
@@ -288,7 +290,7 @@ def kpi_card(label: str, value: str, theme: dict | None = None) -> html.Div:
 
 
 # Theme toggle callback
-@app.callback(
+@dash_app.callback(
     Output("theme-store", "data"),
     Output("theme-toggle-btn", "children"),
     Output("theme-toggle-btn", "style"),
@@ -347,7 +349,7 @@ def toggle_theme(n_clicks, current_theme):
 
 
 # Table styles based on theme
-@app.callback(
+@dash_app.callback(
     Output("table", "style_table"),
     Output("table", "style_cell"),
     Output("table", "style_header"),
@@ -387,7 +389,7 @@ def update_table_styles(current_theme):
 
 
 # Dependent dropdown callbacks
-@app.callback(
+@dash_app.callback(
     Output("category", "style"),
     Output("state", "style"),
     Output("sub_category", "style"),
@@ -410,7 +412,7 @@ def update_dropdown_styles(current_theme):
     date_style = {"backgroundColor": dropdown_bg, "color": text_color}
     return style, style, style, date_style
 
-@app.callback(
+@dash_app.callback(
     Output("state", "options"),
     Input("category", "value"),
     Input("sub_category", "value"),
@@ -429,7 +431,7 @@ def update_state_options(category, sub_category):
     return options
 
 
-@app.callback(
+@dash_app.callback(
     Output("sub_category", "options"),
     Input("category", "value"),
     Input("state", "value"),
@@ -448,7 +450,7 @@ def update_sub_category_options(category, state):
     return options
 
 
-@app.callback(
+@dash_app.callback(
     Output("category", "options"),
     Input("state", "value"),
     Input("sub_category", "value"),
@@ -467,7 +469,7 @@ def update_category_options(state, sub_category):
     return options
 
 
-@app.callback(
+@dash_app.callback(
     Output("top_product_card", "children"),
     Output("kpi_row", "children"),
     Output("sales_trend", "figure"),
@@ -707,4 +709,4 @@ def update_dashboard(category, state, sub_category, start_date, end_date, curren
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8080))
-    app.run(host="0.0.0.0", port=port, debug=False)
+    dash_app.run(host="0.0.0.0", port=port, debug=False)
