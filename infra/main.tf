@@ -15,7 +15,9 @@ resource "google_cloud_run_v2_service" "app" {
   location = var.region
 
   template {
+    
     timeout = "300s"
+
     containers {
       image = var.image
       ports { 
