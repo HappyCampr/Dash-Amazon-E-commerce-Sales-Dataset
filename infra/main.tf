@@ -4,11 +4,11 @@ provider "google" {
 }
 
 # Artifact Registry repo (where GitHub Actions pushes images)
-resource "google_artifact_registry_repository" "dash" {
-  location      = var.region
-  repository_id = "dash"
-  format        = "DOCKER"
-}
+#resource "google_artifact_registry_repository" "dash" {
+#  location      = var.region
+#  repository_id = "dash"
+#  format        = "DOCKER"
+#}
 
 resource "google_cloud_run_v2_service" "app" {
   name     = var.service_name
