@@ -1,0 +1,5 @@
+project_id            = "my-project-id"
+region                = "us-central1"
+image                 = "us-central1-docker.pkg.dev/my-project/dash/dashapp:<tag>"
+service_name          = "dash-portfolio"
+allow_unauthenticated = true

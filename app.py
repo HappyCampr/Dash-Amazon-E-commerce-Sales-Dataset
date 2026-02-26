@@ -5,7 +5,7 @@ import pandas as pd
 import plotly.express as px
 
 from dash import Dash, dcc, html, Input, Output, dash_table
-from dash.exceptions import PreventUpdate
+
 
 
 DATA_PATH = os.path.join("dataset", "amazon_sales_dataset.csv")
@@ -297,9 +297,33 @@ def kpi_card(label: str, value: str, theme: dict | None = None) -> html.Div:
     Input("theme-store", "data"),
 )
 def toggle_theme(n_clicks, current_theme):
+    # On initial load, don't flip
+    if not n_clicks:
+        theme = get_theme(current_theme)
+        btn_text = "☀️ Light Mode" if current_theme == "dark" else "🌙 Dark Mode"
+        btn_style = {
+            "padding": "8px 16px",
+            "borderRadius": "6px",
+            "border": f"2px solid {theme['accent_blue']}",
+            "backgroundColor": theme["card_bg"],
+            "color": theme["text"],
+            "fontSize": "12px",
+            "fontWeight": "600",
+            "cursor": "pointer",
+            "transition": "all 0.3s",
+        }
+        container_style = {
+            "minHeight": "100vh",
+            "backgroundColor": theme["bg"],
+            "color": theme["text"],
+            "fontFamily": "Arial",
+            "transition": "background-color 0.3s, color 0.3s",
+        }
+        return current_theme, btn_text, btn_style, container_style
+
     new_theme = "dark" if current_theme == "light" else "light"
     theme = get_theme(new_theme)
-    
+
     btn_style = {
         "padding": "8px 16px",
         "borderRadius": "6px",
@@ -311,9 +335,7 @@ def toggle_theme(n_clicks, current_theme):
         "cursor": "pointer",
         "transition": "all 0.3s",
     }
-    
     btn_text = "☀️ Light Mode" if new_theme == "dark" else "🌙 Dark Mode"
-    
     container_style = {
         "minHeight": "100vh",
         "backgroundColor": theme["bg"],
@@ -321,7 +343,6 @@ def toggle_theme(n_clicks, current_theme):
         "fontFamily": "Arial",
         "transition": "background-color 0.3s, color 0.3s",
     }
-    
     return new_theme, btn_text, btn_style, container_style
 
 
@@ -685,6 +706,5 @@ def update_dashboard(category, state, sub_category, start_date, end_date, curren
 
 
 if __name__ == "__main__":
-    # Cloud Run / App Runner will typically set PORT=8080
-    port = int(os.environ.get("PORT", "8050"))
-    app.run(host="127.0.0.1", port=port, debug=True)
+    port = int(os.environ.get("PORT", 8080))
+    app.run_server(host="0.0.0.0", port=port, debug=False)
