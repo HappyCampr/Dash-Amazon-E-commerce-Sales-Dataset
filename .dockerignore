@@ -1,0 +1,11 @@
+# ignore the whole test directory – it holds the venv and other cruft
+test/
+
+# optional extras that are usually unneeded in the image
+__pycache__/
+*.pyc
+*.pyo
+*.swp
+.env
+.DS_Store
+
